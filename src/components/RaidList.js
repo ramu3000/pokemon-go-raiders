@@ -4,6 +4,11 @@ import RaidCard from './RaidCard';
 
 
 class RaidList extends Component {
+
+  raidList(){
+    
+  }
+
   render() {
     return (
       <div className="raid-container">
