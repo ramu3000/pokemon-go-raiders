@@ -1,6 +1,5 @@
 import React from 'react';
 import raidImage from '../images/raid.jpg'; 
-import RaidList from './RaidList';
 
 const card = (props) => {
 
@@ -11,6 +10,10 @@ const card = (props) => {
   } 
   const { level, gym: { name: gymName }}  = props.raid;
 
+  const raidLastInMinutes = () =>{
+    return '55 minutes';
+  }
+
 
   return (
     <li>
@@ -19,7 +22,7 @@ const card = (props) => {
           <img src={raidImage} alt="upcoming raid"/>
         </div>
         <div className="raid-proximity"> 300 meters </div>
-        <div className="raid-timers"> 30 minutes </div>
+        <div className="raid-timers">{ raidLastInMinutes() } </div>
       </div>
       <div className="raid-info">
         <p className="raid-gym-name">{ gymName || "betoniporsaat"} </p>

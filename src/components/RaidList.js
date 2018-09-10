@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 
 import RaidCard from './RaidCard';
-import { Timer } from './Timer';
 
 class RaidList extends Component {
 
@@ -30,7 +29,7 @@ class RaidList extends Component {
       { 
         id: 1,
         boss:'machamp',
-        endTime: 900, //s
+        endTime: '14:50', //s
         level: 4,
         playerQue: 2,
         gym: 1
@@ -38,7 +37,7 @@ class RaidList extends Component {
       { 
         id: 2,
         boss:'lugia',
-        endTime: 5400, //s
+        endTime: '14:50', //s
         level: 5,
         playerQue: 0,
         gym: 2
@@ -58,8 +57,8 @@ class RaidList extends Component {
     return (
       <ul>
         {
-          gymRaids.map(function(gymRaid){
-            return <RaidCard raid={gymRaid}/>
+          gymRaids.map(function(gymRaid, i){
+            return <RaidCard key={i} raid={gymRaid}/>
           })
         }
       </ul>
@@ -82,10 +81,6 @@ class RaidList extends Component {
           {this.raidList()}
         <h2>incoming raids</h2>
         <ul>
-          <Timer timeRemainingInSeconds={200}
-          onEveryMinute={() => this.onEveryMinuteUpdateTimeElapsed() }
-          onCompletion={() => this.onCompletion()}/>
-
         </ul>
       </div>
     );
