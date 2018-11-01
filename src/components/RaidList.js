@@ -31,10 +31,26 @@ class RaidList extends Component {
       },
       {
         id: 4,
-        name: "Resistance sacrificial altar",
+        name: "Marjatan Talo",
         coord: {
-          lat: "60.186982",
-          lon: "24.965476"
+          lat: "60.186980",
+          lon: "24.965468"
+        }
+      },
+      {
+        id: 5,
+        name: "Kinaporinpuisto",
+        coord: {
+          lat: "60.189201",
+          lon: "24.961163"
+        }
+      },
+      {
+        id: 6,
+        name: "Hanhiparvi",
+        coord: {
+          lat: "60.184480",
+          lon: "24.962948"
         }
       }
     ],
@@ -54,11 +70,31 @@ class RaidList extends Component {
         level: 5,
         playerQue: 0,
         gym: 2
+      },
+      {
+        id: 3,
+        boss: "lugia",
+        endTime: "14:50", //s
+        level: 5,
+        playerQue: 0,
+        gym: 3
+      },
+      {
+        id: 4,
+        boss: "lugia",
+        endTime: "14:50", //s
+        level: 5,
+        playerQue: 0,
+        gym: 5
       }
     ],
-    myLocation: { latitude: 0, longitude: 0 },
+    myLocation: { latitude: 60.1838972, longitude: 24.9816705 },
     closestGyms: []
   };
+
+  componentDidMount() {
+    this.location();
+  }
 
   async location() {
     if (!("geolocation" in navigator) || !navigator.geolocation) {
@@ -82,26 +118,53 @@ class RaidList extends Component {
     const fetchedGyms = this.state.gyms.map(gym => ({
       latitude: gym.coord.lat,
       longitude: gym.coord.lon,
-      key: gym.id,
-      name: gym.name
+      key: gym.id
     }));
 
-    const closestGyms = geolib.orderByDistance(
+    const gymDistance = geolib.orderByDistance(
       this.state.myLocation,
       fetchedGyms
     );
+
+    const gymsWithDistance = this.state.gyms.map(gym => {
+      let distance;
+      gymDistance.forEach(gymWithDistance => {
+        if (gym.id === +gymWithDistance.key + 1) {
+          distance = gymWithDistance.distance;
+        }
+      });
+      return { distance, ...gym };
+    });
+    this.setState({ closestGyms: gymsWithDistance });
   }
 
   raidList() {
-    const gymRaids = this.state.raids.map(function(raid) {
-      //const gym = this.state.gyms.filter(gym => gym.id === raid.gym);
-      return raid;
+    const gyms = this.state.closestGyms;
+    if (gyms.length === 0) return;
+    const gymsWithHasRaids = this.state.raids.map(function(raid) {
+      const gym = gyms.find(gym => gym.id === raid.gym);
+      return {
+        id: raid.id,
+        name: gym.name,
+        distance: gym.distance,
+        level: raid.level,
+        boss: raid.boss,
+        players: raid.playerQue
+      };
     });
-
     return (
       <ul>
-        {gymRaids.map(function(gymRaid, i) {
-          return <RaidCard key={i} raid={gymRaid} distance={gymRaid} />;
+        {gymsWithHasRaids.map(function(gymRaid, i) {
+          return (
+            <RaidCard
+              key={gymRaid.id}
+              distance={gymRaid.distance}
+              name={gymRaid.name}
+              level={gymRaid.level}
+              players={gymRaid.players}
+              boss={gymRaid.boss}
+            />
+          );
         })}
       </ul>
     );
@@ -116,7 +179,6 @@ class RaidList extends Component {
   }
 
   render() {
-    this.location();
     return (
       <div className="raid-container">
         <h2>Raid in progress</h2>

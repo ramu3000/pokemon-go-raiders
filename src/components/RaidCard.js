@@ -2,13 +2,11 @@ import React from "react";
 import raidImage from "../images/raid.jpg";
 
 const card = props => {
-  if (!props.raid) {
+  if (!props.name) {
+    console.error(props);
     return <li>wrong raid info</li>;
   }
-  const {
-    level,
-    gym: { name: gymName }
-  } = props.raid;
+  const { name, distance, level, players, boss } = props;
 
   const raidLastInMinutes = () => {
     return "55 minutes";
@@ -20,13 +18,17 @@ const card = props => {
         <div className="raid-logo">
           <img src={raidImage} alt="upcoming raid" />
         </div>
-        <div className="raid-proximity"> 300 meters </div>
+        <div className="raid-proximity"> {distance} meters </div>
         <div className="raid-timers">{raidLastInMinutes()} </div>
       </div>
       <div className="raid-info">
-        <p className="raid-gym-name">{gymName || "betoniporsaat"} </p>
-        <p className="raid-people-waiting">There is 3 people waiting </p>
-        <p className="raid-people-rating">{level} </p>
+        <p className="raid-gym-name">{name || "betoniporsaat"} </p>
+        <p className="raid-people-waiting">
+          There is <b>{players || 0}</b> people waiting
+        </p>
+        <p className="raid-people-rating">
+          {boss || "boss not known"} {level || 0}{" "}
+        </p>
       </div>
       <button className="gym-btn-more-info">More info</button>
     </li>
