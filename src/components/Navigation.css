@@ -1,0 +1,45 @@
+.navigation-wrapper {
+  position: fixed;
+  left: calc(50% - 25px);
+  bottom: 150px; }
+  .navigation-wrapper .navigation-button {
+    position: absolute;
+    z-index: 15;
+    width: 75px;
+    height: 75px;
+    background-color: steelblue;
+    border: 3px solid #122f92;
+    border-radius: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center; }
+    .navigation-wrapper .navigation-button > button {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #395063;
+      border: 1px solid black;
+      border-radius: 50px;
+      outline: 0;
+      transition: all 0.5s; }
+      .navigation-wrapper .navigation-button > button span {
+        font-size: 15px; }
+  .navigation-wrapper .navigation-button-raid {
+    width: 50px;
+    height: 50px;
+    background-color: #395063;
+    border-radius: 40px;
+    position: absolute;
+    z-index: 9;
+    transition: all 0.5s;
+    left: 15px;
+    top: 15px; }
+  .navigation-wrapper.active .navigation-button {
+    background-color: white; }
+    .navigation-wrapper.active .navigation-button button {
+      width: 40px;
+      height: 40px; }
+  .navigation-wrapper.active .navigation-button-raid {
+    transform: translateX(-50px) translateY(-45px); }

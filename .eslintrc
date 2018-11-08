@@ -3,5 +3,13 @@
   "plugins": ["prettier"],
   "rules": {
     "prettier/prettier": "error"
-  }
+  },
+  "overrides": [
+    {
+      "files": ["database.rules.json"],
+      "rules": {
+        "no-unused-expressions": "off"
+      }
+    }
+  ]
 }

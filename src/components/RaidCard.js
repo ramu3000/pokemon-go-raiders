@@ -6,10 +6,10 @@ const card = props => {
     console.error(props);
     return <li>wrong raid info</li>;
   }
-  const { name, distance, level, players, boss } = props;
+  const { name, distance, level, players, boss, endTime } = props;
 
   const raidLastInMinutes = () => {
-    return "55 minutes";
+    return endTime;
   };
 
   return (
