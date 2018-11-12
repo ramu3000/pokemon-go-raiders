@@ -1,5 +1,6 @@
 import React from "react";
 import "./Navigation.css";
+import { Link, navigate } from "@reach/router";
 
 class Navigation extends React.Component {
   state = {
@@ -7,8 +8,12 @@ class Navigation extends React.Component {
   };
   componentDidMount() {}
 
-  onNavigationOpen = event => {
+  onNavigationToggle = event => {
     this.setState({ navButtonOpen: !this.state.navButtonOpen });
+  };
+  goToNewRaid = () => {
+    this.onNavigationToggle();
+    navigate("/new-raid");
   };
   render() {
     return (
@@ -17,17 +22,25 @@ class Navigation extends React.Component {
           "navigation-wrapper" + (this.state.navButtonOpen ? " active" : "")
         }
       >
-        <div className="navigation-button-raid">
+        <button onClick={this.goToNewRaid} className="navigation-button-raid">
           <span role="img" aria-label="new raid">
             📯
           </span>
-        </div>
+        </button>
         <div className="navigation-button">
-          <button onClick={this.onNavigationOpen}>
-            <span role="img" aria-label="open menu">
-              ➕
-            </span>
-          </button>
+          {this.state.navButtonOpen ? (
+            <button onClick={this.onNavigationToggle}>
+              <span role="img" aria-label="open menu">
+                ✖
+              </span>
+            </button>
+          ) : (
+            <button onClick={this.onNavigationToggle}>
+              <span role="img" aria-label="open menu">
+                ➕
+              </span>
+            </button>
+          )}
         </div>
       </div>
     );

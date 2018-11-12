@@ -1,12 +1,12 @@
 .navigation-wrapper {
   position: fixed;
   left: calc(50% - 25px);
-  bottom: 150px; }
+  bottom: 100px; }
   .navigation-wrapper .navigation-button {
     position: absolute;
     z-index: 15;
-    width: 75px;
-    height: 75px;
+    width: 55px;
+    height: 55px;
     background-color: steelblue;
     border: 3px solid #122f92;
     border-radius: 50px;
@@ -14,8 +14,8 @@
     justify-content: center;
     align-items: center; }
     .navigation-wrapper .navigation-button > button {
-      width: 60px;
-      height: 60px;
+      width: 40px;
+      height: 40px;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -27,15 +27,20 @@
       .navigation-wrapper .navigation-button > button span {
         font-size: 15px; }
   .navigation-wrapper .navigation-button-raid {
-    width: 50px;
-    height: 50px;
+    width: 35px;
+    height: 35px;
     background-color: #395063;
     border-radius: 40px;
     position: absolute;
     z-index: 9;
     transition: all 0.5s;
     left: 15px;
-    top: 15px; }
+    top: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    outline: 0;
+    border: none; }
   .navigation-wrapper.active .navigation-button {
     background-color: white; }
     .navigation-wrapper.active .navigation-button button {

@@ -1,8 +1,8 @@
 import React, { Component } from "react";
-import geolib from "geolib";
 import RaidCard from "./RaidCard";
 
 import db from "../utils/db";
+import { addGymsDistance } from "../utils";
 
 class RaidList extends Component {
   state = {
@@ -63,7 +63,6 @@ class RaidList extends Component {
     navigator.geolocation.getCurrentPosition(
       position => {
         const { latitude, longitude } = position.coords;
-        //this.setState({ myLocation: { latitude, longitude } });
       },
       err => {
         console.log(err);
@@ -71,32 +70,11 @@ class RaidList extends Component {
       { timeout: 99999 }
     );
 
-    //const myLocation = { latitude: "60.183504", longitude: "24.980144" };
-    const fetchedGyms = {};
-
-    this.state.gyms.forEach(gym => {
-      const id = gym.id;
-      fetchedGyms[id] = {
-        latitude: gym.coords.latitude,
-        longitude: gym.coords.longitude
-      };
-    });
-
-    const gymDistance = geolib.orderByDistance(
-      this.state.myLocation,
-      fetchedGyms
+    const gymsWithDistance = addGymsDistance(
+      this.state.gyms,
+      this.state.myLocation
     );
 
-    const gymsWithDistance = this.state.gyms.map(gym => {
-      let distance;
-      gymDistance.forEach(gymWithDistance => {
-        if (gym.id === gymWithDistance.key) {
-          distance = gymWithDistance.distance;
-        }
-      });
-      return { distance, ...gym };
-    });
-    console.log(gymsWithDistance);
     this.setState({ closestGyms: gymsWithDistance });
   }
 
