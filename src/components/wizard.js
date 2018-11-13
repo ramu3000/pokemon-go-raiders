@@ -55,3 +55,14 @@ export const PageThree = props => {
     </div>
   );
 };
+
+export const WizardPageFourNotStarted = props => {
+  const { setTime } = props;
+  return (
+    <div>
+      <h2>When does it start</h2>
+      <p> it starts in... minutes</p>
+      <input onChange={setTime} type="number" min="1" max="90" />
+    </div>
+  );
+};

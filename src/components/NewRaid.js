@@ -1,10 +1,16 @@
 import React from "react";
 
 import { navigate } from "@reach/router";
+import addMinutes from "date-fns/add_minutes";
 import db from "../utils/db";
 import { addGymsDistance } from "../utils";
 import "./NewRaid.css";
-import { WizardPageOne, PageTwo, PageThree } from "./wizard";
+import {
+  WizardPageOne,
+  PageTwo,
+  PageThree,
+  WizardPageFourNotStarted
+} from "./wizard";
 
 export default class NewRaid extends React.Component {
   state = {
@@ -14,7 +20,8 @@ export default class NewRaid extends React.Component {
     newRaid: {
       difficulty: 0,
       gym: null,
-      active: false
+      active: false,
+      startTime: null
     }
   };
   componentDidMount() {
@@ -47,6 +54,11 @@ export default class NewRaid extends React.Component {
     const raid = { ...this.state.newRaid, active: raidStarted };
     this.setState({ newRaid: raid });
     this.goToNextStep();
+  };
+  setTime = event => {
+    const startTime = addMinutes(new Date(), event.target.value);
+    const raid = { ...this.state.newRaid, startTime };
+    this.setState({ newRaid: raid });
   };
   goToNextStep = () => {
     this.setState({ step: this.state.step + 1 });
@@ -98,7 +110,10 @@ export default class NewRaid extends React.Component {
           <PageThree onBack={this.onBack} hasStarted={this.handleRaidStarted} />
         )}
         {step === 4 && this.state.newRaid.active && <div>Has started</div>}
-        {step === 4 && !this.state.newRaid.active && <div>Has not started</div>}
+        {step === 4 &&
+          !this.state.newRaid.active && (
+            <WizardPageFourNotStarted setTime={this.setTime} />
+          )}
       </div>
     );
   }
