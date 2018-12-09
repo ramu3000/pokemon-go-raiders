@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import RaidCard from "./RaidCard";
+import { parse, format } from "date-fns";
 
 import db from "../utils/db";
 import { addGymsDistance } from "../utils";
@@ -24,42 +25,20 @@ class RaidList extends Component {
   }
 
   async getGyms() {
-    const querySnapshot = await db.gyms;
-    const gyms = [];
-    querySnapshot.forEach(gym => {
-      const data = gym.data();
-      gyms.push({
-        id: gym.id,
-        name: data.name,
-        coords: data.coords
-      });
-    });
+    const gyms = await db.getGyms();
     this.setState({ gyms });
   }
+
   async getRaids() {
-    const querySnapshot = await db.raids;
-    const raids = [];
-    querySnapshot.forEach(raid => {
-      const data = raid.data();
-      raids.push({
-        id: raid.id,
-        boss: data.boss,
-        gym: data.gym.id,
-        level: data.level,
-        playerQue: data.playerQue,
-        endTime: data.endtime
-      });
-    });
-    console.log(raids);
+    const raids = await db.getRaids();
     this.setState({ raids });
   }
 
-  async location() {
+  location() {
     if (!("geolocation" in navigator) || !navigator.geolocation) {
       console.log("no access or geolocation in navigator");
       return;
     }
-
     navigator.geolocation.getCurrentPosition(
       position => {
         const { latitude, longitude } = position.coords;
@@ -84,6 +63,7 @@ class RaidList extends Component {
     const gymsWithHasRaids = this.state.raids.map(function(raid) {
       const gym = gyms.find(gym => gym.id === raid.gym);
       if (!gym) return null;
+      console.log(raid.endTime.nanoseconds);
       return {
         id: raid.id,
         name: gym.name,
@@ -91,7 +71,7 @@ class RaidList extends Component {
         level: raid.level,
         boss: raid.boss,
         players: raid.playerQue,
-        endTime: raid.endTime.seconds
+        endTime: raid.endTime
       };
     });
     return (
@@ -100,8 +80,7 @@ class RaidList extends Component {
           if (!gymRaid) {
             return null;
           }
-          const time = new Date(gymRaid.endTime).toLocaleTimeString();
-          console.log(time);
+          const time = format(gymRaid.endTime, "HH:mm:ss").toString();
           return (
             <RaidCard
               key={gymRaid.id}

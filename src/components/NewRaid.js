@@ -9,13 +9,15 @@ import {
   WizardPageOne,
   PageTwo,
   PageThree,
-  WizardPageFourNotStarted
+  WizardPageFourNotStarted,
+  WizardPageFourHasStarted
 } from "./wizard";
 
 export default class NewRaid extends React.Component {
   state = {
     gyms: [],
     filterDistance: 1000,
+    gymTime: 45,
     step: 1,
     newRaid: {
       difficulty: 0,
@@ -55,14 +57,47 @@ export default class NewRaid extends React.Component {
     this.setState({ newRaid: raid });
     this.goToNextStep();
   };
-  setTime = event => {
+  setStartTime = event => {
     const startTime = addMinutes(new Date(), event.target.value);
     const raid = { ...this.state.newRaid, startTime };
+    this.setState({ newRaid: raid });
+  };
+  setEndTime = event => {
+    const endTime = addMinutes(new Date(), event.target.value);
+    const raid = { ...this.state.newRaid, endTime };
     this.setState({ newRaid: raid });
   };
   goToNextStep = () => {
     this.setState({ step: this.state.step + 1 });
   };
+  onSaveRaid = () => {
+    const registeredTime = new Date();
+    let raid = null;
+
+    if (this.state.newRaid.startTime) {
+      const endTime = addMinutes(
+        this.state.newRaid.startTime,
+        this.state.gymTime
+      );
+      raid = { endTime, registeredTime, ...this.state.newRaid };
+    } else if (this.state.newRaid.endTime) {
+      const startTime = addMinutes(
+        this.state.newRaid.endTime,
+        -this.state.gymTime
+      );
+      raid = { startTime, registeredTime, ...this.state.newRaid };
+    } else {
+      console.error("time has not been added");
+      return;
+    }
+    this.setState({ newRaid: raid }, () => {
+      this.saveData(raid);
+    });
+  };
+  async saveData(raid) {
+    await db.saveRaid(raid);
+    navigate("/");
+  }
   async getGyms() {
     const querySnapshot = await db.gyms;
     const gyms = [];
@@ -109,10 +144,19 @@ export default class NewRaid extends React.Component {
         {step === 3 && (
           <PageThree onBack={this.onBack} hasStarted={this.handleRaidStarted} />
         )}
-        {step === 4 && this.state.newRaid.active && <div>Has started</div>}
+        {step === 4 &&
+          this.state.newRaid.active && (
+            <WizardPageFourHasStarted
+              setTime={this.setStartTime}
+              saveRaid={this.onSaveRaid}
+            />
+          )}
         {step === 4 &&
           !this.state.newRaid.active && (
-            <WizardPageFourNotStarted setTime={this.setTime} />
+            <WizardPageFourNotStarted
+              setTime={this.setStartTime}
+              saveRaid={this.onSaveRaid}
+            />
           )}
       </div>
     );

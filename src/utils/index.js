@@ -22,6 +22,7 @@ export const addGymsDistance = (gyms, playerLocation) => {
 
   const gymsWithDistance = gyms.map(gym => {
     let distance;
+    /* todo: could be better optimized */
     gymDistance.forEach(gymWithDistance => {
       if (gym.id === gymWithDistance.key) {
         distance = gymWithDistance.distance;

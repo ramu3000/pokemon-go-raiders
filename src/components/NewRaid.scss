@@ -37,3 +37,19 @@
     }
   }
 }
+.gym-card__item {
+  .raid-proximity-timer-wrapper {
+    text-align: left;
+    margin: auto;
+    width: 90px;
+    svg {
+      margin-right: 5px;
+    }
+  }
+  .raid-info__wrapper {
+    text-align: left;
+    .raid-gym-name {
+      margin-bottom: 10px;
+    }
+  }
+}

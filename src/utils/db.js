@@ -1,6 +1,7 @@
 import firebase from "firebase";
 
 import { FirebaseConfig } from "../config/keys";
+import { addSeconds } from "date-fns";
 
 class Firebase {
   constructor() {
@@ -17,6 +18,62 @@ class Firebase {
 
   get raids() {
     return this.db.collection("raids").get();
+  }
+
+  async saveRaid(raid) {
+    const gymReference = await this.db.collection("gyms").doc(raid.gym);
+    // added: time, boss, endtime, gym, level, playerque, startime.
+    const raidData = {
+      added: raid.registeredTime,
+      boss: raid.boss ? raid.boss : null,
+      endtime: raid.endTime,
+      gym: gymReference,
+      level: raid.difficulty,
+      playerque: raid.playerque ? raid.playerque : null,
+      starttime: raid.startTime
+    };
+
+    await this.db
+      .collection("raids")
+      .add(raidData)
+      .then(function(docRef, cb) {
+        console.log("Document written with ID: ", docRef.id);
+      })
+      .catch(function(error) {
+        console.error("Error adding document: ", error);
+      });
+  }
+
+  async getRaids() {
+    const querySnapshot = await this.raids;
+    const raids = [];
+    querySnapshot.forEach(raid => {
+      const data = raid.data();
+      const date = data.endtime.toDate();
+      raids.push({
+        id: raid.id,
+        boss: data.boss,
+        gym: data.gym.id,
+        level: data.level,
+        playerQue: data.playerQue,
+        endTime: date
+      });
+    });
+    return raids;
+  }
+
+  async getGyms() {
+    const querySnapshot = await this.gyms;
+    const gyms = [];
+    querySnapshot.forEach(gym => {
+      const data = gym.data();
+      gyms.push({
+        id: gym.id,
+        name: data.name,
+        coords: data.coords
+      });
+    });
+    return gyms;
   }
 }
 

@@ -2,6 +2,7 @@ import React from "react";
 import Rating from "react-rating";
 
 import GymCard from "./GymCard";
+import "./wizard.css";
 
 export const WizardPageOne = props => {
   function renderGyms() {
@@ -57,12 +58,28 @@ export const PageThree = props => {
 };
 
 export const WizardPageFourNotStarted = props => {
-  const { setTime } = props;
+  const { setTime, saveRaid } = props;
   return (
     <div>
       <h2>When does it start</h2>
       <p> it starts in... minutes</p>
       <input onChange={setTime} type="number" min="1" max="90" />
+      <button className="green" onClick={saveRaid}>
+        Save Raid
+      </button>
+    </div>
+  );
+};
+export const WizardPageFourHasStarted = props => {
+  const { setTime, saveRaid } = props;
+  return (
+    <div>
+      <h2>How much time left?</h2>
+      <p> it ends in... minutes</p>
+      <input onChange={setTime} type="number" min="1" max="90" />
+      <button className="green" onClick={saveRaid}>
+        Save Raid
+      </button>
     </div>
   );
 };
