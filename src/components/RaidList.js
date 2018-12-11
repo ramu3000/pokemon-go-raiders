@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import RaidCard from "./RaidCard";
-import { parse, format } from "date-fns";
 
 import db from "../utils/db";
 import { addGymsDistance } from "../utils";
@@ -63,7 +62,6 @@ class RaidList extends Component {
     const gymsWithHasRaids = this.state.raids.map(function(raid) {
       const gym = gyms.find(gym => gym.id === raid.gym);
       if (!gym) return null;
-      console.log(raid.endTime.nanoseconds);
       return {
         id: raid.id,
         name: gym.name,
@@ -71,7 +69,8 @@ class RaidList extends Component {
         level: raid.level,
         boss: raid.boss,
         players: raid.playerQue,
-        endTime: raid.endTime
+        endTime: raid.endTime,
+        startTime: raid.startTime
       };
     });
     return (
@@ -80,7 +79,7 @@ class RaidList extends Component {
           if (!gymRaid) {
             return null;
           }
-          const time = format(gymRaid.endTime, "HH:mm:ss").toString();
+
           return (
             <RaidCard
               key={gymRaid.id}
@@ -89,7 +88,8 @@ class RaidList extends Component {
               level={gymRaid.level}
               players={gymRaid.players}
               boss={gymRaid.boss}
-              endTime={time}
+              endTime={gymRaid.endTime}
+              startTime={gymRaid.startTime}
             />
           );
         })}

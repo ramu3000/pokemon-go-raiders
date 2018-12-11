@@ -1,15 +1,43 @@
 import React from "react";
+import Countdown from "react-countdown-now";
+
+import { formatTimesSTamp, isFuture } from "../utils/dateFormatting";
 import raidImage from "../images/raid.jpg";
 
 const card = props => {
   if (!props.name) {
-    console.error(props);
+    //todo proptypes
     return <li>wrong raid info</li>;
   }
-  const { name, distance, level, players, boss, endTime } = props;
 
-  const raidLastInMinutes = () => {
-    return endTime;
+  const { name, distance, level, players, boss, endTime, startTime } = props;
+
+  const raidLastInMinutes = (startTime, endTime) => {
+    if (isFuture(startTime)) {
+      return `starts in ${formatTimesSTamp(startTime)}`;
+    }
+    const Ending = () => `Ended ${formatTimesSTamp(endTime)}`;
+    return (
+      <div>
+        <Countdown
+          date={endTime}
+          renderer={({ minutes, seconds, completed }) => {
+            if (completed) {
+              return <Ending />;
+            } else {
+              return (
+                <span>
+                  <i className="fas fa-clock" />
+                  {minutes}:{seconds}
+                </span>
+              );
+            }
+          }}
+        >
+          <Ending />
+        </Countdown>
+      </div>
+    );
   };
 
   return (
@@ -24,8 +52,7 @@ const card = props => {
           </div>
 
           <div className="raid-timers">
-            <i className="fas fa-clock" />
-            {raidLastInMinutes()}
+            {raidLastInMinutes(startTime, endTime)}
           </div>
         </div>
       </div>

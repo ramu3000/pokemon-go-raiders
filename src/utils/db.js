@@ -1,7 +1,6 @@
 import firebase from "firebase";
 
 import { FirebaseConfig } from "../config/keys";
-import { addSeconds } from "date-fns";
 
 class Firebase {
   constructor() {
@@ -50,13 +49,16 @@ class Firebase {
     querySnapshot.forEach(raid => {
       const data = raid.data();
       const date = data.endtime.toDate();
+      const datestart = data.starttime.toDate();
+      console.log(data);
       raids.push({
         id: raid.id,
         boss: data.boss,
         gym: data.gym.id,
         level: data.level,
         playerQue: data.playerQue,
-        endTime: date
+        endTime: date,
+        startTime: datestart
       });
     });
     return raids;
