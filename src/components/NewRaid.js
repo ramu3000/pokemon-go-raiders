@@ -79,13 +79,14 @@ export default class NewRaid extends React.Component {
         this.state.newRaid.startTime,
         this.state.gymTime
       );
-      raid = { endTime, registeredTime, ...this.state.newRaid };
+      raid = { ...this.state.newRaid, endTime, registeredTime };
     } else if (this.state.newRaid.endTime) {
       const startTime = addMinutes(
         this.state.newRaid.endTime,
         -this.state.gymTime
       );
-      raid = { startTime, registeredTime, ...this.state.newRaid };
+
+      raid = { ...this.state.newRaid, startTime, registeredTime };
     } else {
       console.error("time has not been added");
       return;
@@ -147,7 +148,7 @@ export default class NewRaid extends React.Component {
         {step === 4 &&
           this.state.newRaid.active && (
             <WizardPageFourHasStarted
-              setTime={this.setStartTime}
+              setTime={this.setEndTime}
               saveRaid={this.onSaveRaid}
             />
           )}

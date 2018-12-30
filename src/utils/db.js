@@ -20,8 +20,15 @@ class Firebase {
   }
 
   async saveRaid(raid) {
+    //require fields
+    if (!raid.startTime || !raid.endTime || !raid.registeredTime) {
+      console.error("required fields are missing, could not save", raid);
+      return false;
+    }
+
     const gymReference = await this.db.collection("gyms").doc(raid.gym);
     // added: time, boss, endtime, gym, level, playerque, startime.
+
     const raidData = {
       added: raid.registeredTime,
       boss: raid.boss ? raid.boss : null,

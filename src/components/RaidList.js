@@ -3,6 +3,7 @@ import RaidCard from "./RaidCard";
 
 import db from "../utils/db";
 import { addGymsDistance } from "../utils";
+import { isPast, isFuture } from "../utils/dateFormatting";
 
 class RaidList extends Component {
   state = {
@@ -56,8 +57,9 @@ class RaidList extends Component {
     this.setState({ closestGyms: gymsWithDistance });
   }
 
-  raidList() {
+  raidList(raidstatus) {
     const gyms = this.state.closestGyms;
+    let raids = [];
     if (gyms.length === 0) return;
     const gymsWithHasRaids = this.state.raids.map(function(raid) {
       const gym = gyms.find(gym => gym.id === raid.gym);
@@ -73,9 +75,29 @@ class RaidList extends Component {
         startTime: raid.startTime
       };
     });
+    switch (raidstatus) {
+      case "current":
+        raids = gymsWithHasRaids.filter(
+          raid => isPast(raid.startTime) && isFuture(raid.endTime)
+        );
+        break;
+      case "incoming":
+        raids = gymsWithHasRaids
+          .filter(raid => isFuture(raid.startTime))
+          .sort(
+            ({ startTime }, { startTime: startTime2 }) => startTime > startTime2
+          );
+        break;
+      case "ended":
+        raids = gymsWithHasRaids.filter(raid => isPast(raid.endTime));
+        break;
+      default:
+        raids = [...gymsWithHasRaids];
+        break;
+    }
     return (
       <ul>
-        {gymsWithHasRaids.map(function(gymRaid, i) {
+        {raids.map(function(gymRaid, i) {
           if (!gymRaid) {
             return null;
           }
@@ -109,8 +131,11 @@ class RaidList extends Component {
     return (
       <div className="raid-container">
         <h2>Raid in progress</h2>
-        {this.raidList()}
+        {this.raidList("current")}
         <h2>incoming raids</h2>
+        {this.raidList("incoming")}
+        <h2>Ended raids</h2>
+        {this.raidList("ended")}
         <ul />
       </div>
     );
