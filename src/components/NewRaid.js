@@ -10,7 +10,8 @@ import {
   PageTwo,
   PageThree,
   WizardPageFourNotStarted,
-  WizardPageFourHasStarted
+  WizardPageFourHasStarted,
+  WizardPageFiveChooseRaidBoss
 } from "./wizard";
 
 export default class NewRaid extends React.Component {
@@ -65,7 +66,7 @@ export default class NewRaid extends React.Component {
   setEndTime = event => {
     const endTime = addMinutes(new Date(), event.target.value);
     const raid = { ...this.state.newRaid, endTime };
-    this.setState({ newRaid: raid });
+    this.setState({ newRaid: raid }, this.goToNextStep);
   };
   goToNextStep = () => {
     this.setState({ step: this.state.step + 1 });
@@ -156,6 +157,13 @@ export default class NewRaid extends React.Component {
           !this.state.newRaid.active && (
             <WizardPageFourNotStarted
               setTime={this.setStartTime}
+              saveRaid={this.onSaveRaid}
+            />
+          )}
+        {step === 5 &&
+          this.state.newRaid.active && (
+            <WizardPageFiveChooseRaidBoss
+              bossPool={[]}
               saveRaid={this.onSaveRaid}
             />
           )}
